@@ -2,6 +2,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 void yyerror(char *s);
+struct Instruction{
+  char instruction[128];
+  int addresse;
+  Instruction * jumpAddr;
+};
 %}
 
 %union { int nb; char var[128]; float fnb; }
@@ -17,12 +22,39 @@ void yyerror(char *s);
 %token <fnb> tNB_FLOAT
 %token <var> tID
 
-%start Compilateur
+%start Code
 %%
-Compilateur :	Fonction;
+Code :	RootElem
+    |   RootElem Code;
 
-ConstDec :
-Fonction : 
+RootElem : VarDec
+    |   FonctionDec;
+
+VarDec : Type tID tEOL
+    |   Type tID ttASSIGN Val tEOL;
+
+VarDec : Type tID tEOL
+    |   Type tID ttASSIGN Val tEOL;
+
+Type : tINT
+    | tFLOAT 
+    | tVOID;
+
+Val : tNB_INT
+    |   tNB_FLOAT;
+
+FonctionIntDec : tINT tID tPO Args tPF Scope;
+
+FonctionVoidDec : tVOID tID tPO Args tPF Scope;
+
+FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
+
+Scope : tAO CorpScope tAF;
+
+CorpScope : CorpElem | CorpScope CorpElem;
+CorpElem : VarDec | While | If | For;
+
+
 %%
 
 void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
