@@ -19,8 +19,10 @@ void yyerror(char *s);
 
 %start Compilateur
 %%
-Compilateur :	;
-While : 
+Compilateur :	Fonction;
+
+ConstDec :
+Fonction : 
 %%
 
 void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
