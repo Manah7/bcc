@@ -1,11 +1,13 @@
 %{
 #include <stdlib.h>
 #include <stdio.h>
+#include "ts.h"
+
 void yyerror(char *s);
 struct Instruction{
   char instruction[128];
   int addresse;
-  Instruction * jumpAddr;
+  struct Instruction * jumpAddr;
 };
 %}
 
@@ -14,7 +16,7 @@ struct Instruction{
 %token tINT tFLOAT tVOID tCONST
 %token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tXOR tAND tOR tINF tSUP
 %token tEOL tVIRGULE
-%token tREF
+%token tREF tMAIN
 %token tPO tPF tAO tAF
 %token tERROR
 
@@ -39,9 +41,6 @@ Maths : Val | tID | Maths Operateur Maths;
 PlusEgal : tID tPLUSEGAL Maths tEOL;
 MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
-%Increment : tID tINCR tEOL; 
-%Decrement : tID tDINCR tEOL;
-
 Operateur : tADD|tSOU|tMUL|tXOR|tAND|tOR|tEGALEGAL|tLSL|tLSR;
 
 
@@ -50,29 +49,42 @@ Type : tINT
     | tVOID;
 
 Val : tNB_INT
-    |   tNB_FLOAT;
+    | tNB_FLOAT;
+
+FonctionDec : FonctionMainDec 
+            | FonctionIntDec
+            | FonctionVoidDec 
+            | FonctionFloatDec
+            ;
 
 FonctionMainDec : tINT tMAIN tPO Args tPF Scope;
 
 FonctionIntDec : tINT tID tPO Args tPF Scope{
-    
+
 };
 
 FonctionVoidDec : tVOID tID tPO Args tPF Scope;
 
 FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
 
-Scope : tAO CorpScope tAF;
+Args : ;
+
+Scope : tAO CorpScope tAF{profPlus();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
-CorpElem : VarDec | While | If | For | Affectation | Scope;
+CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope;
+
+While : ;
+If : ;
+For : ;
 
 
 %%
 
 void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
 int main(void) {
-  printf("Compilateur\n"); // yydebug=1;
+  printf("Compilateur\n"); 
+  // yydebug=1;
   yyparse();
   return 0;
 }

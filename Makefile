@@ -1,11 +1,11 @@
-GRM=compilateur.y
-LEX=compilateur.l
-BIN=compilateur
+GRM=bcc.y
+LEX=bcc.l
+BIN=bcc
 
 CC=gcc
 CFLAGS=-Wall -g
 
-OBJ=y.tab.o lex.yy.o main.o
+OBJ=y.tab.o lex.yy.o ts.o # main.o
 
 all: $(BIN)
 
@@ -22,5 +22,5 @@ $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 clean:
-	rm $(OBJ) y.tab.c y.tab.h lex.yy.c
+	rm $(OBJ) y.tab.c y.tab.h lex.yy.c bcc
 
