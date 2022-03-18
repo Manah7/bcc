@@ -17,6 +17,7 @@
 "else" { return tELSE; }
 "for" { return tFOR; }
 
+"main" { return tMAIN; }
 "return" { return tRETURN; }
 
 "int" { return tINT; }
@@ -27,7 +28,7 @@
 "goto" { return tGOTO; }
 ":" { return tLABEL; }
 
-"==" { return tEGAL; }
+"==" { return tEGALEGAL; }
 "+=" { return tPLUSEGAL; }
 "-=" { return tMOINSEGAL; }
 "++" { return tINCR; }
