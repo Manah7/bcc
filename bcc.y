@@ -69,7 +69,7 @@ FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
 
 Args : ;
 
-Scope : tAO CorpScope tAF{profPlus();};
+Scope : tAO {profPlus();} CorpScope tAF {profMoins();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
 CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope;
@@ -78,6 +78,8 @@ While : ;
 If : ;
 For : ;
 
+
+Error : tERROR{yyerror("Invalid string."); exit(-1);};
 
 %%
 
