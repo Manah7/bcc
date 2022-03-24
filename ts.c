@@ -62,6 +62,13 @@ int add_ts(char name[TAILLE_SYMBOLE], enum Type typ) {
     return table[nextI].addr;
 }
 
+int add_ts_wn( ) {
+    table[nextI].prof = currentProf;
+    table[nextI].addr = currAddr;
+    currAddr+=TAILLE_INT;
+    return table[nextI].addr;
+}
+
 int get_symbol_addr(char name[]){
     int i = find(name);
     if( i == -1){

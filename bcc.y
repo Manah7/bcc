@@ -43,20 +43,30 @@ VarDec : Type tID tEOL {add_ts($2, $1);}
     |   Type Affectation {add_ts($2, $1);};
 
 Affectation : tID tASSIGN Maths tEOL {return $1;};
-Maths : Val | tID | Maths Operateur Maths;
+
+Operation : {prof_plus();} Maths {prof_moins();};
+
+Maths : tID {return get_symbol_addr($1);}
+    | MathTemp {return $1;};
+
+MathTemp :  
+      Maths tADD Maths {}
+    | Maths tSOU Maths 
+    | Maths tMUL Maths 
+    | Maths tXOR Maths 
+    | Maths tMUL Maths 
+    | Maths tAND Maths 
+    | Maths tOR Maths 
+    | Maths tEGALEGAL Maths
+    | Maths tLSL Maths 
+    | Maths tLSR Maths
+    | tNB_INT
+
+
 
 PlusEgal : tID tPLUSEGAL Maths tEOL;
 MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
-Operateur : tADD
-    |tSOU
-    |tMUL
-    |tXOR
-    |tAND
-    |tOR
-    |tEGALEGAL
-    |tLSL
-    |tLSR;
 
 Val : tNB_INT
     | tNB_FLOAT;
@@ -96,7 +106,10 @@ Error : tERROR{panic("Invalid string.");};
 
 %%
 
-void yyerror(char *s) { fprintf(stderr, "%s\n", s); }
+void yyerror(char *s) {
+    fprintf(stderr, "%s\n", s); 
+}
+
 int main(void) {
   printf("Compilateur\n"); 
   // yydebug=1;

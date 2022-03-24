@@ -19,13 +19,16 @@ void asm_print(const char *str){
 }
 
 /* Opérations sur INT */
-void asm_assign_int_value(const char *name, int value){
-    int addr = get_symbol_addr(name);
+void asm_assign_int_value(int addr, int value){
     printf("AFC %d %d", addr, value);    
 }
 
-void asm_plus_egal_int(const char *id1, const char *id2){
-    int addr1 = get_symbol_addr(id1);
-    int addr2 = get_symbol_addr(id2);
+void asm_plus_egal_int(int addr1, int addr2){
     printf("ADD %d %d %d", addr1, addr1, addr2);
+}
+
+int asm_add(int addr1, int addr2) {
+    int dest = add_ts_wn();
+    printf("ADD %d %d %d", dest, addr1, addr2);
+    return dest;
 }
