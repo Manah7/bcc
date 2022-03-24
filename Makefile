@@ -5,7 +5,7 @@ BIN=bcc
 CC=gcc
 CFLAGS=-Wall -g
 
-OBJ=y.tab.o lex.yy.o ts.o utils.o # main.o
+OBJ=y.tab.o lex.yy.o ts.o utils.o functions.o operations.o main.o
 
 all: $(BIN)
 
@@ -13,7 +13,7 @@ all: $(BIN)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 y.tab.c: $(GRM)
-	yacc -d $<
+	yacc -d -t -v $<
 
 lex.yy.c: $(LEX)
 	flex $<

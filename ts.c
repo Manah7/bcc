@@ -1,5 +1,6 @@
 #include "ts.h"
 #include "utils.h"
+#include "operations.h"
 #include <string.h>
 
 #define TAILLE_TABLEAU 8192
@@ -9,7 +10,7 @@
 #define TAILLE_FLOAT 4
 
 typedef struct {
-    char name[256];
+    char name[TAILLE_SYMBOLE];
     int addr;
     enum Type type;
     int prof;
@@ -46,13 +47,15 @@ int add_ts(char name[TAILLE_SYMBOLE], enum Type typ) {
     switch (typ)
     {
     case tinteger:
-        table[nextI].addr = currAddr+=TAILLE_INT;
+        table[nextI].addr = currAddr;
+        currAddr+=TAILLE_INT;
         break;
     case tvoid:
         panic("A variable can't have void type.");
         break;
     case tfloat:
-        table[nextI].addr = currAddr+=TAILLE_FLOAT;
+        table[nextI].addr = currAddr;
+        currAddr+=TAILLE_FLOAT;
         break;
     
     default:

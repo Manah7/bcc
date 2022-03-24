@@ -20,10 +20,11 @@
 "main" { return tMAIN; }
 "return" { return tRETURN; }
 
-"int" { return tINT; }
-"float" { return tFLOAT; }
-"void" { return tVOID; }
-"const" { return tCONST; }
+"int " { bcc_print("INT found in LEX\n");
+    return tINT; }
+"float " { return tFLOAT; }
+"void " { return tVOID; }
+"const " { return tCONST; }
 
 "print" { return tPRINT; }
 
@@ -58,7 +59,6 @@
 "{" { return tAO; }
 "}" { return tAF; }
 
-
 -?[0-9]+(\.[0-9]+) {
 	  //yylval.nb = atof(yytext);
 	  return tNB_FLOAT;
@@ -69,9 +69,10 @@
 	  return tNB_INT;
 	}
 
-(a-zA-Z_)(\w)* { 
+[a-zA-Z_]+ { 
+	printf("ID found\n");
     return tID;
     }
 
+" " {}
 .	{ return tERROR; }
-

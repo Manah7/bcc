@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "ts.h"
 #include "utils.h"
+#include "operations.h"
 
 void yyerror(char *s);
 struct Instruction{
@@ -26,6 +27,7 @@ struct Instruction{
 %token <var> tID
 %type <nb> Type
 %type <var> Affectation
+%type <nb> Maths
 
 %start Code
 %%
@@ -35,22 +37,22 @@ Code :	RootElem
 RootElem : VarDec
     |   FonctionDec;
 
-Type : tINT {return 1;}
-    | tFLOAT {return 2;}
-    | tVOID {return 0;};
+Type : tINT {$$ = 1;
+        bcc_print("Int détecté\n");}
+    | tFLOAT {$$ = 2;}
+    | tVOID {$$ = 0;};
 
-VarDec : Type tID tEOL {add_ts($2, $1);}
+VarDec : Type tID tEOL {add_ts($2, $1);
+                        bcc_print("Ajouté à la table\n");}
     |   Type Affectation {add_ts($2, $1);};
 
-Affectation : tID tASSIGN Maths tEOL {return $1;};
+Affectation : tID tASSIGN Operation tEOL {$$ = $1;};
 
 Operation : {prof_plus();} Maths {prof_moins();};
 
-Maths : tID {return get_symbol_addr($1);}
-    | MathTemp {return $1;};
-
-MathTemp :  
-      Maths tADD Maths {}
+// Opérations mathématiques retourne l'adresse de sortie
+Maths : tID {$$ = get_symbol_addr($1);}
+    | Maths tADD Maths {$$ = asm_add($1, $3);}
     | Maths tSOU Maths 
     | Maths tMUL Maths 
     | Maths tXOR Maths 
@@ -60,16 +62,14 @@ MathTemp :
     | Maths tEGALEGAL Maths
     | Maths tLSL Maths 
     | Maths tLSR Maths
-    | tNB_INT
+    | tNB_INT {$$ = asm_temp_val($1);}
 
+Print : tPRINT tPO Maths tPF tEOL {};
 
 
 PlusEgal : tID tPLUSEGAL Maths tEOL;
 MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
-
-Val : tNB_INT
-    | tNB_FLOAT;
 
 FonctionDec : FonctionMainDec 
             | FonctionIntDec
@@ -77,7 +77,7 @@ FonctionDec : FonctionMainDec
             | FonctionFloatDec
             ;
 
-FonctionMainDec : tINT tMAIN tPO Args tPF Scope;
+FonctionMainDec : tINT tMAIN tPO tPF {printf("main:\n");} Scope ;
 
 FonctionIntDec : tINT tID tPO Args tPF Scope{
 
@@ -87,7 +87,6 @@ FonctionVoidDec : tVOID tID tPO Args tPF Scope;
 
 FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
 
-Print : tPRINT tPO tID tPF tEOL {};
 
 Args : ;
 
@@ -108,11 +107,5 @@ Error : tERROR{panic("Invalid string.");};
 
 void yyerror(char *s) {
     fprintf(stderr, "%s\n", s); 
-}
-
-int main(void) {
-  printf("Compilateur\n"); 
-  // yydebug=1;
-  yyparse();
-  return 0;
+    exit(4);
 }

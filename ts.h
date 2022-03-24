@@ -19,4 +19,6 @@ void prof_plus();
 // Décremente la profondeur actuelle et dépile les symboles de cette dernière
 void prof_moins();
 
+int add_ts_wn();
+
 #endif
