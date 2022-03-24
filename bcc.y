@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ts.h"
+#include "utils.h"
 
 void yyerror(char *s);
 struct Instruction{
@@ -12,7 +13,7 @@ struct Instruction{
 %}
 
 %union { int nb; char var[128]; float fnb; }
-%token tWHILE tIF tELSE tFOR tRETURN  tGOTO tLABEL
+%token tWHILE tIF tELSE tFOR tRETURN tGOTO tLABEL tPRINT
 %token tINT tFLOAT tVOID tCONST
 %token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tXOR tAND tOR tINF tSUP
 %token tEOL tVIRGULE
@@ -23,6 +24,8 @@ struct Instruction{
 %token <nb> tNB_INT
 %token <fnb> tNB_FLOAT
 %token <var> tID
+%type <nb> Type
+%type <var> Affectation
 
 %start Code
 %%
@@ -32,21 +35,28 @@ Code :	RootElem
 RootElem : VarDec
     |   FonctionDec;
 
-VarDec : Type tID tEOL
-    |   Type Affectation;
+Type : tINT {return 1;}
+    | tFLOAT {return 2;}
+    | tVOID {return 0;};
 
-Affectation : tID tASSIGN Maths tEOL;
+VarDec : Type tID tEOL {add_ts($2, $1);}
+    |   Type Affectation {add_ts($2, $1);};
+
+Affectation : tID tASSIGN Maths tEOL {return $1;};
 Maths : Val | tID | Maths Operateur Maths;
 
 PlusEgal : tID tPLUSEGAL Maths tEOL;
 MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
-Operateur : tADD|tSOU|tMUL|tXOR|tAND|tOR|tEGALEGAL|tLSL|tLSR;
-
-
-Type : tINT
-    | tFLOAT 
-    | tVOID;
+Operateur : tADD
+    |tSOU
+    |tMUL
+    |tXOR
+    |tAND
+    |tOR
+    |tEGALEGAL
+    |tLSL
+    |tLSR;
 
 Val : tNB_INT
     | tNB_FLOAT;
@@ -67,19 +77,22 @@ FonctionVoidDec : tVOID tID tPO Args tPF Scope;
 
 FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
 
+Print : tPRINT tPO tID tPF tEOL {};
+
 Args : ;
 
-Scope : tAO {profPlus();} CorpScope tAF {profMoins();};
+Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
-CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope;
+CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope | Print;
+
 
 While : ;
 If : ;
 For : ;
 
 
-Error : tERROR{yyerror("Invalid string."); exit(-1);};
+Error : tERROR{panic("Invalid string.");};
 
 %%
 

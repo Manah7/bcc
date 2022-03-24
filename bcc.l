@@ -25,6 +25,8 @@
 "void" { return tVOID; }
 "const" { return tCONST; }
 
+"print" { return tPRINT; }
+
 "goto" { return tGOTO; }
 ":" { return tLABEL; }
 

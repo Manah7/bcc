@@ -5,7 +5,7 @@ BIN=bcc
 CC=gcc
 CFLAGS=-Wall -g
 
-OBJ=y.tab.o lex.yy.o ts.o # main.o
+OBJ=y.tab.o lex.yy.o ts.o utils.o # main.o
 
 all: $(BIN)
 
