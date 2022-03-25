@@ -13,7 +13,7 @@ struct Instruction{
 };
 %}
 
-%union { int nb; char var[128]; float fnb; }
+%union { int nb; int addr; char var[128]; float fnb; }
 %token tWHILE tIF tELSE tFOR tRETURN tGOTO tLABEL tPRINT
 %token tINT tFLOAT tVOID tCONST
 %token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tXOR tAND tOR tINF tSUP
@@ -23,11 +23,11 @@ struct Instruction{
 %token tERROR
 
 %token <nb> tNB_INT
+%type <nb> Type
 %token <fnb> tNB_FLOAT
 %token <var> tID
-%type <nb> Type
 %type <var> Affectation
-%type <nb> Maths
+%type <addr> Maths
 
 %start Code
 %%
@@ -42,18 +42,13 @@ Type : tINT {$$ = 1;
     | tFLOAT {$$ = 2;}
     | tVOID {$$ = 0;};
 
-VarDec : Type tID tEOL {add_ts($2, $1);
-                        bcc_print("Ajouté à la table\n");}
-    |   Type Affectation {add_ts($2, $1);};
-
-Affectation : tID tASSIGN Operation tEOL {$$ = $1;};
-
-Operation : {prof_plus();} Maths {prof_moins();};
+VarDec : Type tID tEOL {add_ts($2, $1);}
+    |   Type tID tASSIGN {$<addr>$ = add_ts($2, $1); prof_plus();} Maths tEOL {asm_assign_int_value($<addr>4, $5); prof_moins();};
 
 // Opérations mathématiques retourne l'adresse de sortie
 Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tADD Maths {$$ = asm_add($1, $3);}
-    | Maths tSOU Maths 
+/*    | Maths tSOU Maths 
     | Maths tMUL Maths 
     | Maths tXOR Maths 
     | Maths tMUL Maths 
@@ -61,7 +56,7 @@ Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tOR Maths 
     | Maths tEGALEGAL Maths
     | Maths tLSL Maths 
-    | Maths tLSR Maths
+    | Maths tLSR Maths */
     | tNB_INT {$$ = asm_temp_val($1);}
 
 Print : tPRINT tPO Maths tPF tEOL {};
@@ -72,20 +67,11 @@ MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
 
 FonctionDec : FonctionMainDec 
-            | FonctionIntDec
-            | FonctionVoidDec 
-            | FonctionFloatDec
-            ;
+            | OtherFonctionDec;
 
 FonctionMainDec : tINT tMAIN tPO tPF {printf("main:\n");} Scope ;
 
-FonctionIntDec : tINT tID tPO Args tPF Scope{
-
-};
-
-FonctionVoidDec : tVOID tID tPO Args tPF Scope;
-
-FonctionFloatDec : tFLOAT tID tPO Args tPF Scope;
+OtherFonctionDec : Type tID tPO Args tPF Scope;
 
 
 Args : ;
@@ -95,6 +81,8 @@ Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 CorpScope : CorpElem | CorpScope CorpElem;
 CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope | Print;
 
+// A REVOIR
+Affectation : tID tASSIGN Maths tEOL;
 
 While : ;
 If : ;

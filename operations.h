@@ -3,6 +3,9 @@
 
 void asm_print(int addr);
 
+/* Assign a const to an address */
+void asm_assign_int_const(int addr, int value); 
+
 /* Assign a value to an address */
 void asm_assign_int_value(int addr, int value);
 

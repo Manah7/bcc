@@ -22,5 +22,5 @@ $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 clean:
-	rm $(OBJ) y.tab.c y.tab.h lex.yy.c bcc
+	rm $(OBJ) y.tab.c y.tab.h lex.yy.c bcc y.output
 

@@ -11,6 +11,7 @@ void bcc_print(const char *str){
 void panic(const char *str) {
     fprintf(stderr, "An error has been encountred: ");
     fprintf(stderr, str);
-    exit(-3);
+    fprintf(stderr, "\n");
+    exit(3);
 }
 

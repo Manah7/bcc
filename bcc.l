@@ -20,7 +20,7 @@
 "main" { return tMAIN; }
 "return" { return tRETURN; }
 
-"int " { bcc_print("INT found in LEX\n");
+"int" { bcc_print("INT found in LEX\n");
     return tINT; }
 "float " { return tFLOAT; }
 "void " { return tVOID; }

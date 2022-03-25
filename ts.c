@@ -37,7 +37,7 @@ int find(char name[TAILLE_SYMBOLE]){
 // Ajoute un symbole 
 int add_ts(char name[TAILLE_SYMBOLE], enum Type typ) {
     
-    if(find(name)==-1){
+    if(find(name)!=-1){
         panic("redeclaration of variable");
     }
     strncpy(table[nextI].name, name, TAILLE_SYMBOLE);

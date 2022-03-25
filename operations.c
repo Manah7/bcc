@@ -6,8 +6,12 @@ void asm_print(int addr){
 }
 
 /* Opérations sur INT */
-void asm_assign_int_value(int addr, int value){
+void asm_assign_int_const(int addr, int value){
     printf("AFC %d %d", addr, value);    
+}
+
+void asm_assign_int_value(int addr, int valueaddr){
+    printf("COP %d, %d", addr, valueaddr); 
 }
 
 void asm_plus_egal_int(int addr1, int addr2){

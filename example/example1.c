@@ -1,4 +1,4 @@
-void main(){
+int main(){
     int variable1 = 2 ;
     variable1 += 3;
     print(variable1);
