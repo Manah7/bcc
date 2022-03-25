@@ -37,8 +37,7 @@ Code :	RootElem
 RootElem : VarDec
     |   FonctionDec;
 
-Type : tINT {$$ = 1;
-        bcc_print("Int détecté\n");}
+Type : tINT {$$ = 1;}
     | tFLOAT {$$ = 2;}
     | tVOID {$$ = 0;};
 
@@ -48,6 +47,7 @@ VarDec : Type tID tEOL {add_ts($2, $1);}
 // Opérations mathématiques retourne l'adresse de sortie
 Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tADD Maths {$$ = asm_add($1, $3);}
+    | tPO Maths tPF {$$ = $2;}
 /*    | Maths tSOU Maths 
     | Maths tMUL Maths 
     | Maths tXOR Maths 
@@ -59,10 +59,10 @@ Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tLSR Maths */
     | tNB_INT {$$ = asm_temp_val($1);}
 
-Print : tPRINT tPO Maths tPF tEOL {};
+Print : tPRINT tPO Maths tPF tEOL {asm_print($3);};
 
 
-PlusEgal : tID tPLUSEGAL Maths tEOL;
+PlusEgal : tID tPLUSEGAL Maths tEOL{asm_plus_egal_int(get_symbol_addr($1),$3);};
 MoinsEgal : tID tMOINSEGAL Maths tEOL;
 
 
