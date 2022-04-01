@@ -69,8 +69,7 @@
 	  return tNB_INT;
 	}
 
-[a-zA-Z_]+ { 
-	printf("ID found\n");
+[a-zA-Z_]*[a-zA-Z_0-9]+ { 
     strncpy(yylval.var, yytext, 128);
     return tID;
     }

@@ -24,7 +24,9 @@ int currAddr = 0 ;
 
 
 void print_ts(){
-    printf("TABLE SYMBOLES (prof:%d, nextI%d)\n", currentProf, nextI);
+    return;
+    printf("=========== TEMPORAIRE - A ENLEVER ===========\n");
+    printf("TABLE SYMBOLES (prof: %d; nextI: %d)\n", currentProf, nextI);
     printf("Name\tAddr\tProf\n");
     for (size_t i = 0; i < 10; i++)
     {
@@ -34,45 +36,54 @@ void print_ts(){
 
 
 int find(char name[TAILLE_SYMBOLE]){
-    // Debug
-    bcc_print("Fonction find, recherche de : ");
+    bcc_print("[+] Fonction find, recherche de : ");
     bcc_print(name);
     bcc_print("\n");
 
     int i = 0;
-    while(!strncmp(table[i].name, name, strlen(name)) && i != nextI){
+    while(strcmp(table[i].name, name) != 0 && i != nextI){
         i++;
     }
 
     if(i == nextI){
+        bcc_print("[-] Non trouvé\n");
         return -1;
     } else {
+        bcc_print("[+] Trouvé\n");
         return i;
     }
 }
 
 // Ajoute un symbole 
-int add_ts(char name[TAILLE_SYMBOLE], enum Type typ) {
-    printf("NAME = %s\n", name);
+int add_ts(char *name_r, enum Type typ) {
+    bcc_print("[+] Entrée fonction add_ts\n");
+
+    char name[TAILLE_SYMBOLE];
+    memset(name, 0, TAILLE_SYMBOLE);
+    strncpy(name, name_r, strlen(name_r));
     
     if(find(name) != -1){
         panic("Redeclaration of variable (add_ts)");
     }
 
-    strncpy(&name, &table[nextI].name, strlen(name));
+    memset(table[nextI].name, 0, TAILLE_SYMBOLE);
+    strncpy(table[nextI].name, name, strlen(name));
+
     table[nextI].type = typ;
     table[nextI].prof = currentProf;
     
     switch (typ)
     {
     case tinteger:
+        bcc_print("[+] Ajout d'un integer\n");
         table[nextI].addr = currAddr;
         currAddr+=TAILLE_INT;
         break;
     case tvoid:
-        panic("A variable can't have void type.");
+        panic("A variable can't have void type.\n");
         break;
     case tfloat:
+        bcc_print("[+] Ajout d'un float\n");
         table[nextI].addr = currAddr;
         currAddr+=TAILLE_FLOAT;
         break;
@@ -82,31 +93,53 @@ int add_ts(char name[TAILLE_SYMBOLE], enum Type typ) {
     }
     nextI++;
     print_ts();
-    return table[nextI].addr;
+    return table[nextI-1].addr;
 }
 
 int add_ts_wn() {
-    strncpy("TMP", &table[nextI].name, 3);
+    bcc_print("[+] Entrée fonction add_ts_wn\n");
+
+    memset(table[nextI].name, 0, TAILLE_SYMBOLE);
+    strcpy(table[nextI].name, "TMP");
+
     table[nextI].prof = currentProf;
     table[nextI].addr = currAddr;
-    currAddr+=TAILLE_INT;
+    currAddr += TAILLE_INT;
     nextI++;
-    printf("TEMPORAIRE\n");
+
+    // Debug
     print_ts();
-    return table[nextI].addr;
+
+    return table[nextI-1].addr;
 }
 
-int get_symbol_addr(char name[TAILLE_SYMBOLE]){
+int get_symbol_addr(char *name_r){
+    bcc_print("[+] Entrée fonction get_symbol_addr :\n");
+
+    char name[TAILLE_SYMBOLE];
+    memset(name, 0, TAILLE_SYMBOLE);
+    strncpy(name, name_r, strlen(name_r));
+
     int i = find(name);
     if( i == -1){
-        panic("Opération sur variable non déclarée (symbol addr)");
+        panic("Opération sur variable non déclarée (symbol addr)\n");
     }
+
+    bcc_print("[+] Adresse trouvée : <COMMENT>\n");
+    //printf("%d\n", table[i].addr);
     return table[i].addr;
 }
-enum Type get_symbol_type(char name[TAILLE_SYMBOLE]){
+
+enum Type get_symbol_type(char *name_r){
+    bcc_print("[+] Entrée fonction get_symbol_type\n");
+    
+    char name[TAILLE_SYMBOLE];
+    memset(name, 0, TAILLE_SYMBOLE);
+    strncpy(name, name_r, strlen(name_r));
+
     int i = find(name);
     if( i == -1){
-        panic("Opération sur variable non déclarée (symbol type)");
+        panic("Opération sur variable non déclarée (symbol type)\n");
     }
     return table[i].type;
 }
