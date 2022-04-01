@@ -42,6 +42,7 @@
 "-"	{ return tSOU; }
 "+"	{ return tADD; }
 "*"	{ return tMUL; }
+"/"	{ return tDIV; }
 "^"	{ return tXOR; }
 "&&" { return tAND; }
 "||" { return tOR; }

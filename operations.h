@@ -18,4 +18,16 @@ int asm_add(int addr1, int addr2);
 int asm_temp_val(int value);
 
 
+void asm_moins_egal_int(int addr1, int addr2);
+
+int asm_sou(int addr1, int addr2);
+
+int asm_mul(int addr1, int addr2);
+
+int asm_div(int addr1, int addr2);
+
+int asm_inf(int addr1, int addr2);
+
+int asm_sup(int addr1, int addr2);
+
 #endif

@@ -16,7 +16,7 @@ struct Instruction{
 %union { int nb; int addr; char var[128]; float fnb; }
 %token tWHILE tIF tELSE tFOR tRETURN tGOTO tLABEL tPRINT
 %token tINT tFLOAT tVOID tCONST
-%token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tXOR tAND tOR tINF tSUP
+%token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tDIV tXOR tAND tOR tINF tSUP
 %token tEOL tVIRGULE
 %token tREF tMAIN
 %token tPO tPF tAO tAF
@@ -48,9 +48,12 @@ VarDec : Type tID tEOL {add_ts($2, $1);}
 Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tADD Maths {$$ = asm_add($1, $3);}
     | tPO Maths tPF {$$ = $2;}
-/*    | Maths tSOU Maths 
-    | Maths tMUL Maths 
-    | Maths tXOR Maths 
+    | Maths tSOU Maths {$$ = asm_sou($1, $3);}
+    | Maths tMUL Maths {$$ = asm_mul($1, $3);}
+    | Maths tDIV Maths {$$ = asm_div($1, $3);}
+    | Maths tINF Maths {$$ = asm_inf($1, $3);}
+    | Maths tSUP Maths {$$ = asm_sup($1, $3);}
+/*    | Maths tXOR Maths 
     | Maths tMUL Maths 
     | Maths tAND Maths 
     | Maths tOR Maths 
@@ -81,11 +84,11 @@ Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 CorpScope : CorpElem | CorpScope CorpElem;
 CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope | Print;
 
-// A REVOIR
-Affectation : tID tASSIGN Maths tEOL;
+Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
+
+If : tIF tPO Maths tPF tAO {prof_plus();} Scope tAF {asm_if($3);};
 
 While : ;
-If : ;
 For : ;
 
 
