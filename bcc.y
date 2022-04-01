@@ -85,7 +85,7 @@ CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scop
 
 Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
 
-If : tIF tPO Maths tPF tAO {prof_plus();} Scope tAF {};
+If : tIF Maths tAO {prof_plus(); $<addr>$ = pre_if($2);} Scope tAF {patch_if($<addr>4);};
 
 While : ;
 For : ;

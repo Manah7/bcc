@@ -75,6 +75,6 @@ int pre_if(int arg) {
     return stack_top - 1;
 }
 
-void patch_if(int to_patch, int to_patch_with) {
-    stack[to_patch].op2 = to_patch_with;
+void patch_if(int to_patch) {
+    stack[to_patch].op2 = stack_top;
 }

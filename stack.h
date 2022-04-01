@@ -8,6 +8,6 @@ void add_stack_op3(char ins[3], int op1, int op2, int op3);
 void unstack();
 
 int pre_if(int arg);
-void patch_if(int to_patch, int to_patch_with);
+void patch_if(int to_patch);
 
 #endif
