@@ -30,4 +30,6 @@ int asm_inf(int addr1, int addr2);
 
 int asm_sup(int addr1, int addr2);
 
+int asm_eq(int addr1, int addr2);
+
 #endif

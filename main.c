@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "utils.h"
+#include "stack.h"
 
 /* BCC main entry */
 int main(int argc, char* argv[]) {
@@ -8,8 +9,9 @@ int main(int argc, char* argv[]) {
 
     extern yydebug;
     yydebug = 0;
-    //FILE* fp = fopen(argv[1], "a");
     yyparse();
 
-    return 1;
+    unstack();
+
+    return 0;
 }

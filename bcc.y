@@ -53,11 +53,10 @@ Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tDIV Maths {$$ = asm_div($1, $3);}
     | Maths tINF Maths {$$ = asm_inf($1, $3);}
     | Maths tSUP Maths {$$ = asm_sup($1, $3);}
+    | Maths tEGALEGAL Maths {$$ = asm_eq($1, $3);}
 /*    | Maths tXOR Maths 
-    | Maths tMUL Maths 
     | Maths tAND Maths 
     | Maths tOR Maths 
-    | Maths tEGALEGAL Maths
     | Maths tLSL Maths 
     | Maths tLSR Maths */
     | tNB_INT {$$ = asm_temp_val($1);}
@@ -86,7 +85,7 @@ CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scop
 
 Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
 
-If : tIF tPO Maths tPF tAO {prof_plus();} Scope tAF {asm_if($3);};
+If : tIF tPO Maths tPF tAO {prof_plus();} Scope tAF {};
 
 While : ;
 For : ;
