@@ -8,7 +8,7 @@ int main(int argc, char* argv[]) {
     bcc_print("BCC - Basic C Compiler\n");
 
     extern yydebug;
-    yydebug = 1;
+    yydebug = 0;
     yyparse();
 
     unstack();

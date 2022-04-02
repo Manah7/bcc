@@ -1,8 +1,20 @@
 # Basic C Compiler
 BCC is a basic C compiler.
 
-## TODO la prochaine fois
-On a implémenté une première version sans les contrôle de flux. Le contrôle de flux IF a été implémenté mais non testé (cf. `stack.c`). Il est constitué de deux fonctions qui sont appelées avant puis après (la seconde patch l'adresse du jump) le IF.
+## Examples
+```
+$ make
+$ ./bcc < example/4example.c 2>/dev/null
+main:
+1	AFC 4 2 
+2	COP 0 4 
+3	AFC 8 2 
+4	EQU 12 0 8
+5	JMF 12 7 0
+6	PRI 0 
+7	AFC 20 9 
+8	COP 16 20
+```
 
 ## Supported functions
 * **Athm**: Addition
@@ -14,9 +26,7 @@ On a implémenté une première version sans les contrôle de flux. Le contrôle
 * **Athm**: Moins égal
 
 * **Fctn**: Print
+* **Loop**: If
 
-## A revoir
-```
-%% Increment : tID tINCR tEOL; 
-%% Decrement : tID tDINCR tEOL;
-```
+## Contact
+Manah7 & enjmateo (Github)

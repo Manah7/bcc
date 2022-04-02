@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "stack.h"
+#include "utils.h"
 #include "operations.h"
 
 #define STACK_SIZE 1024
+#define SP_START 1
 
 typedef struct {
     char operande[3];
@@ -19,7 +21,7 @@ typedef struct {
  *  - op == -2 : op doit être changé par un patch de boucle
  */
 
-int stack_top = 0;
+int stack_top = SP_START;
 instruction stack[STACK_SIZE];
 
 void add_stack_op1(char ins[3], int op1) {
@@ -47,8 +49,9 @@ void add_stack_op3(char ins[3], int op1, int op2, int op3) {
 }
 
 void unstack() {
-    int sp = 0;
+    int sp = SP_START;
     while (stack_top > sp) {
+        printf("%d\t", sp);
         printf("%s ", stack[sp].operande);
         printf("%d ", stack[sp].op1);
 
@@ -65,16 +68,16 @@ void unstack() {
 }
 
 int pre_if(int arg) {
-    int zero = asm_temp_val(0);
-    int eq = asm_eq(zero, arg);
+    bcc_print("[+] Entrée fonction pre_if\n");
+
     strncpy(stack[stack_top].operande, "JMF", 3);
-    stack[stack_top].op1 = eq;
+    stack[stack_top].op1 = arg;
     stack[stack_top].op2 = -2;
     
-    stack_top++;
-    return stack_top - 1;
+    return stack_top++;
 }
 
-void patch_if(int to_patch) {
+void patch_loop(int to_patch) {
+    bcc_print("[>] Loop done, patching...\n");
     stack[to_patch].op2 = stack_top;
 }
