@@ -77,7 +77,7 @@ int asm_inf(int addr1, int addr2) {
 
 int asm_sup(int addr1, int addr2) {
     int dest = add_ts_wn();
-    add_stack_op3("ADD", dest, addr1, addr2);
+    add_stack_op3("SUP", dest, addr1, addr2);
     //printf("SUP %d %d %d\n", dest, addr1, addr2);
     return dest;
 }

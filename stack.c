@@ -77,7 +77,24 @@ int pre_if(int arg) {
     return stack_top++;
 }
 
-void patch_loop(int to_patch) {
-    bcc_print("[>] Loop done, patching...\n");
+void patch_if(int to_patch) {
+    bcc_print("[>] If done, patching...\n");
+    stack[to_patch].op2 = stack_top;
+}
+
+int pre_while(int arg) {
+    bcc_print("[+] Entrée fonction pre_while\n");
+
+    strncpy(stack[stack_top].operande, "JMF", 3);
+    stack[stack_top].op1 = arg;
+    stack[stack_top].op2 = -2;
+    
+    return stack_top++;
+}
+
+void patch_while(int to_patch) {
+    bcc_print("[>] While done, end and patching...\n");
+
+    add_stack_op1("JMP", to_patch - 1);
     stack[to_patch].op2 = stack_top;
 }

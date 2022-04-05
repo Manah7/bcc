@@ -65,7 +65,7 @@ Print : tPRINT tPO Maths tPF tEOL {asm_print($3);};
 
 
 PlusEgal : tID tPLUSEGAL Maths tEOL{asm_plus_egal_int(get_symbol_addr($1),$3);};
-MoinsEgal : tID tMOINSEGAL Maths tEOL;
+MoinsEgal : tID tMOINSEGAL Maths tEOL{asm_moins_egal_int(get_symbol_addr($1),$3);};
 
 
 FonctionDec : FonctionMainDec 
@@ -81,15 +81,13 @@ Args : ;
 Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
-CorpElem : VarDec | While | If | For | Affectation | PlusEgal | MoinsEgal | Scope | Print;
+CorpElem : VarDec | While | If | Affectation | PlusEgal | MoinsEgal | Scope | Print;
 
 Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
 
-If : tIF Maths {prof_plus(); $<addr>$ = pre_if($2);} Scope {patch_loop($<addr>3); prof_moins();};
+If : tIF Maths {prof_plus(); $<addr>$ = pre_if($2);} Scope {patch_if($<addr>3); prof_moins();};
 
-While : ;
-For : ;
-
+While : tWHILE Maths {prof_plus(); $<addr>$ = pre_while($2);} Scope {patch_while($<addr>3); prof_moins();};
 
 Error : tERROR{panic("Invalid string.");};
 
