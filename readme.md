@@ -28,5 +28,28 @@ main:
 * **Fctn**: Print
 * **Loop**: If
 
+## Instruction set
+Supported instructions:
+```
+ADD
+MUL
+SOU
+DIV
+LSL
+LSR
+
+INF
+SUP
+EQU
+
+AFC
+COP
+
+JMP
+JMF
+
+PRI
+```
+
 ## Contact
 Manah7 & enjmateo (Github)

@@ -3,4 +3,6 @@ int main(){
     while (b > 0) {
         b = b - 1;
     }
+
+    int a = b << 2;
 }

@@ -89,3 +89,18 @@ int asm_eq(int addr1, int addr2) {
     //printf("EQU %d %d %d\n", dest, addr1, addr2);
     return dest;
 }
+
+///////// LS /////////
+int asm_lsl(int addr1, int addr2) {
+    int dest = add_ts_wn();
+    add_stack_op3("LSL", dest, addr1, addr2);
+    //printf("LSL %d %d %d\n", dest, addr1, addr2);
+    return dest;
+}
+
+int asm_lsr(int addr1, int addr2) {
+    int dest = add_ts_wn();
+    add_stack_op3("LSR", dest, addr1, addr2);
+    //printf("LSR %d %d %d\n", dest, addr1, addr2);
+    return dest;
+}

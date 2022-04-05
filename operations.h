@@ -32,4 +32,8 @@ int asm_sup(int addr1, int addr2);
 
 int asm_eq(int addr1, int addr2);
 
+int asm_lsl(int addr1, int addr2);
+
+int asm_lsr(int addr1, int addr2);
+
 #endif
