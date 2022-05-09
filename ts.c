@@ -28,7 +28,7 @@ void print_ts(){
     printf("=========== TEMPORAIRE - A ENLEVER ===========\n");
     printf("TABLE SYMBOLES (prof: %d; nextI: %d)\n", currentProf, nextI);
     printf("Name\tAddr\tProf\n");
-    for (size_t i = 0; i < 15; i++)
+    for (size_t i = 0; i < 10; i++)
     {
         printf("%s\t%d\t%d\n", table[i].name, table[i].addr, table[i].prof);
     }   
@@ -208,13 +208,19 @@ void prof_moins(){
             case tfloat:
                 currAddr -= TAILLE_FLOAT;
                 break;
-            
             default:
+                bcc_print("[-] Erreur de type !\n");
+                currAddr -= TAILLE_INT;
                 break;
         }
         nextI--;
+        table[nextI].name[0] = 'CLR\0';
+        table[nextI].type = tvoid;
+        table[nextI].prof = 0;
+        table[nextI].addr = 0;
     }
     currentProf--;
+    bcc_print("[!] Profondeur remontée de 1.\n");
     print_ts();
 
 }

@@ -1,6 +1,10 @@
 # Basic C Compiler
 BCC is a basic C compiler.
 
+## TODO-list
+* Ajouter un segment mémoire proche à chaque fonction.
+* Terminer l'interpreteur.
+
 ## Examples
 ```
 $ make

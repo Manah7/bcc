@@ -79,6 +79,9 @@ int get_fnct_stack(int addr)
     return -1;
 }
 
+/** @brief Unstack and apply modifier at the end of the parsing.
+ *  Also apply corrector for function calls.
+ **/
 void unstack()
 {
     bcc_print("[+] Unstacking: \n");
@@ -87,7 +90,7 @@ void unstack()
     {
         if (stack[sp].op1 == -3)
         {
-            printf("\n");
+            //printf("\n");
             printf("%d\t%s: \n", sp, get_symbol_name(stack[sp].op2));
             sp++;
             continue;
