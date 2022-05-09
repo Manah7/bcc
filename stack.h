@@ -15,4 +15,6 @@ void patch_if(int to_patch);
 int pre_while(int arg);
 void patch_while(int to_patch);
 
+int pre_fnct(int addr);
+
 #endif

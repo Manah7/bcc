@@ -78,7 +78,7 @@ FonctionMainDec : tINT tMAIN tPO tPF {add_stack_function($2);} Scope ;
 
 OtherFonctionDec : Type tID tPO tPF {add_stack_function($2);} Scope ;
 
-fctnCall : tID tPO tPF tEOL {asm_call_fctn(get_symbol_addr($1));};
+fctnCall : tID tPO tPF tEOL {pre_fnct(get_symbol_addr($1));};
 
 Return : tRETURN tEOL {add_return();}; 
 

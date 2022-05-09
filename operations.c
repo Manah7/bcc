@@ -105,8 +105,3 @@ int asm_lsr(int addr1, int addr2) {
     return dest;
 }
 
-///////// LS /////////
-int asm_call_fctn(int addr){
-    add_stack_op1("RET", addr);
-    //printf("JMP %d %d\n", addr, nb_args);
-}
