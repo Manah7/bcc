@@ -4,7 +4,9 @@
 #include "ts.h"
 #include "utils.h"
 #include "operations.h"
+#include "stack.h"
 
+int yylex();
 void yyerror(char *s);
 struct Instruction{
   char instruction[128];
@@ -18,7 +20,7 @@ struct Instruction{
 %token tINT tFLOAT tVOID tCONST
 %token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tDIV tXOR tAND tOR tINF tSUP
 %token tEOL tVIRGULE
-%token tREF tMAIN
+%token tREF 
 %token tPO tPF tAO tAF
 %token tERROR
 
@@ -26,6 +28,7 @@ struct Instruction{
 %type <nb> Type
 %token <fnb> tNB_FLOAT
 %token <var> tID
+%token <var> tMAIN
 %type <var> Affectation
 %type <addr> Maths
 
@@ -71,25 +74,24 @@ MoinsEgal : tID tMOINSEGAL Maths tEOL{asm_moins_egal_int(get_symbol_addr($1),$3)
 FonctionDec : FonctionMainDec 
             | OtherFonctionDec;
 
-FonctionMainDec : tINT tMAIN tPO tPF {printf("main:\n");} Scope ;
+FonctionMainDec : tINT tMAIN tPO tPF {add_stack_function($2);} Scope ;
 
-OtherFonctionDec : Type tID tPO Args tPF Scope;
+OtherFonctionDec : Type tID tPO tPF {add_stack_function($2);} Scope ;
 
+fctnCall : tID tPO tPF tEOL {asm_call_fctn(get_symbol_addr($1));};
 
-Args : ;
+Return : tRETURN tEOL {add_return();}; 
 
 Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
-CorpElem : VarDec | While | If | Affectation | PlusEgal | MoinsEgal | Scope | Print;
+CorpElem : VarDec | While | If | Affectation | PlusEgal | MoinsEgal | Scope | Print | fctnCall | Return;
 
 Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
 
 If : tIF Maths {prof_plus(); $<addr>$ = pre_if($2);} Scope {patch_if($<addr>3); prof_moins();};
 
 While : tWHILE Maths {prof_plus(); $<addr>$ = pre_while($2);} Scope {patch_while($<addr>3); prof_moins();};
-
-Error : tERROR{panic("Invalid string.");};
 
 %%
 

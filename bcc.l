@@ -17,11 +17,11 @@
 "else" { return tELSE; }
 "for" { return tFOR; }
 
-"main" { return tMAIN; }
+"main" { strncpy(yylval.var, "main", 128);
+        return tMAIN; }
 "return" { return tRETURN; }
 
-"int" { bcc_print("INT found in LEX\n");
-    return tINT; }
+"int" { return tINT; }
 "float" { return tFLOAT; }
 "void" { return tVOID; }
 "const" { return tCONST; }

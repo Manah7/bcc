@@ -4,7 +4,8 @@
 enum Type {
     tvoid = 0, 
     tinteger = 1,
-    tfloat = 2
+    tfloat = 2,
+    tfunction = 3
 };
 
 // Ajoute un symbole 
@@ -12,6 +13,7 @@ int add_ts(char *name_r, enum Type typ);
 
 int get_symbol_addr(char *name_r);
 enum Type get_symbol_type(char *name_r);
+char * get_symbol_name(int addr);
 
 // Incrémente la profondeur actuelle
 void prof_plus();

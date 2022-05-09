@@ -7,7 +7,6 @@
 #define TAILLE_TABLEAU 8192
 #define TAILLE_SYMBOLE 128
 #define TAILLE_INT 4
-#define TAILLE_BOOL 1
 #define TAILLE_FLOAT 4
 
 typedef struct {
@@ -24,11 +23,12 @@ int currAddr = 0 ;
 
 
 void print_ts(){
-    return;
+    return; // Exiting
+
     printf("=========== TEMPORAIRE - A ENLEVER ===========\n");
     printf("TABLE SYMBOLES (prof: %d; nextI: %d)\n", currentProf, nextI);
     printf("Name\tAddr\tProf\n");
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < 15; i++)
     {
         printf("%s\t%d\t%d\n", table[i].name, table[i].addr, table[i].prof);
     }   
@@ -54,9 +54,29 @@ int find(char name[TAILLE_SYMBOLE]){
     }
 }
 
+int find_name(int addr){
+    bcc_print("[+] Fonction find_name\n");
+
+    int i = 0;
+    while(table[i].addr != addr && i != nextI){
+        i++;
+    }
+
+    if(i == nextI){
+        bcc_print("[-] Non trouvé\n");
+        return -1;
+    } else {
+        bcc_print("[+] Trouvé\n");
+        return i;
+    }
+}
+
 // Ajoute un symbole 
 int add_ts(char *name_r, enum Type typ) {
     bcc_print("[+] Entrée fonction add_ts\n");
+
+    //debug
+    print_ts();
 
     char name[TAILLE_SYMBOLE];
     memset(name, 0, TAILLE_SYMBOLE);
@@ -74,6 +94,11 @@ int add_ts(char *name_r, enum Type typ) {
     
     switch (typ)
     {
+    case tfunction:
+        bcc_print("[+] Ajout d'une fonction\n");
+        table[nextI].addr = currAddr;
+        currAddr += TAILLE_INT;
+        break;
     case tinteger:
         bcc_print("[+] Ajout d'un integer\n");
         table[nextI].addr = currAddr;
@@ -130,6 +155,28 @@ int get_symbol_addr(char *name_r){
     return table[i].addr;
 }
 
+char * get_symbol_name(int addr){
+    bcc_print("[+] Entrée fonction get_symbol_name. \n");
+    //printf("[!] Adresse cherchée : %d\n", addr);
+    print_ts();
+
+    char * name = malloc(TAILLE_SYMBOLE);
+    int i_var = find_name(addr);
+    if(i_var == -1){
+        panic("Opération sur variable non déclarée (symbol name)\n");
+    } else {
+        strncpy(name, table[find_name(addr)].name, TAILLE_SYMBOLE);
+    }
+
+    bcc_print("[>] Nom de symbol trouvé : ");
+    bcc_print(name);
+    bcc_print("\n");
+
+    print_ts();
+    
+    return name;
+}
+
 enum Type get_symbol_type(char *name_r){
     bcc_print("[+] Entrée fonction get_symbol_type\n");
     
@@ -154,6 +201,7 @@ void prof_moins(){
     while(table[nextI-1].prof == currentProf){
 
         switch(table[nextI-1].type){
+            case tfunction:
             case tinteger:
                 currAddr -= TAILLE_INT;
                 break;

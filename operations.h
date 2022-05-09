@@ -36,4 +36,6 @@ int asm_lsl(int addr1, int addr2);
 
 int asm_lsr(int addr1, int addr2);
 
+int asm_call_fctn(int addr);
+
 #endif
