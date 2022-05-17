@@ -35,23 +35,26 @@ main:
 ## Instruction set
 Supported instructions:
 ```
-ADD
-MUL
-SOU
-DIV
-LSL
-LSR
+ADD c
+MUL c
+SOU c
+DIV c
+LSL c
+LSR c
 
-INF
-SUP
-EQU
+INF c
+SUP c
+EQU c
 
-AFC
-COP
-NOP
+AFC c
+COP c
+LDR c
+STR c
+NOP c
 
-JMP
-JMF
+JMP ar
+JMF ar
+CALL (ASM only)
 
 PRI
 RET
@@ -59,21 +62,41 @@ RET
 Bytecode:
 ```
 -- Convention jeu instruction :
-           -- 00000000 -> ADD
-           -- 00000001 -> SOU
-           -- 00000010 -> MUL
-           -- 00000011 -> LSL
-           -- 00000100 -> LSR
-           -- 00000101 -> INF
-           -- 00000110 -> SUP
-           -- 00000111 -> EQU
-           -- 00001000 -> AFC
-           -- 00001001 -> COP
-           -- 00001010 -> JMP
-           -- 00001011 -> JMF
-           -- 00001100 -> PRI
-           -- 00001101 -> RET
-           -- 11111111 -> NOP
+           -- 0   00000000 -> ADD
+           -- 1   00000001 -> SOU
+           -- 2   00000010 -> MUL
+           -- 3   00000011 -> LSL
+           -- 4   00000100 -> LSR
+           -- 5   00000101 -> INF
+           -- 6   00000110 -> SUP
+           -- 7   00000111 -> EQU
+           -- 8   00001000 -> AFC
+           -- 9   00001001 -> COP
+           -- 10  00001010 -> JMP
+           -- 11  00001011 -> JMF
+           -- 12  00001100 -> PRI
+           -- 13  00001101 -> RET
+           -- 14  00001110 -> LDR
+           -- 15  00001111 -> STR
+           -- 255 11111111 -> NOP
+```
+Registers:
+```
+r0
+r1
+r2
+r3
+r4
+r5
+r6
+r7
+r8
+r9
+r10
+r11
+r12
+r13
+r14
 ```
 
 ## Contact

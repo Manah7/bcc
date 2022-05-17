@@ -173,7 +173,7 @@ void patch_while(int to_patch)
 int pre_fnct(int fctn_addr) {
     bcc_print("[+] Entrée fonction pre_fctn\n");
 
-    strncpy(stack[stack_top].operande, "JMP", 3);
+    strncpy(stack[stack_top].operande, "CAL", 3);
     stack[stack_top].op1 = -4;
     stack[stack_top].op2 = fctn_addr;
     stack[stack_top].op3 = -1;
