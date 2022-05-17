@@ -91,7 +91,8 @@ void unstack()
         if (stack[sp].op1 == -3)
         {
             //printf("\n");
-            printf("%d\t%s: \n", sp, get_symbol_name(stack[sp].op2));
+            printf("%d\tNOP\n", sp);
+            printf("%s: \n", get_symbol_name(stack[sp].op2));
             sp++;
             continue;
         }

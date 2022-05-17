@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
 
 # Parse a file line by line
+from time import sleep
+
+
 asm = open('bin/prg', 'r')
 ip = -1
 ri = -1
 
 memory = [0] * 65536
 
+def print_memory():
+    print("Memory:")
+    for i in range(0, 10):
+        print("{:04x}".format(i), ":", memory[i])
+
 def get_line(i):
+    asm.seek(0)
     for line in asm:
         if int(line.split()[0]) == i:
             return line
@@ -15,6 +24,7 @@ def get_line(i):
     exit(-1)
 
 def find_main():
+    asm.seek(0)
     for line in asm:
         if line.split()[1] == 'main:':
             return int(line.split()[0])
@@ -23,48 +33,58 @@ def find_main():
 
 
 ip = find_main()
-print("Entry point found at: ", ip)
+#print("Entry point found at: ", ip)
 
 while True:
-    line = get_line(ip)
-    print("[>] Handling line: ", line)
+    line = get_line(ip)[:-1]
+    #print("> ", line)
+
     if line == '':
         break
+    
     tokens = line.split()
 
     if tokens[1] == 'AFC':
-        memory[int(tokens[2])/4] = int(tokens[3])
+        memory[int(int(int(tokens[2])/4))] = int(tokens[3])
     elif tokens[1] == 'ADD':
-        memory[int(tokens[2])/4] = memory[int(tokens[3])/4] + memory[int(tokens[4])/4]
+        memory[int(int(tokens[2])/4)] = memory[int(int(tokens[3])/4)] + memory[int(int(tokens[4])/4)]
     elif tokens[1] == 'SOU':
-        memory[int(tokens[2])/4] = memory[int(tokens[3])/4] - memory[int(tokens[4])/4]
+        memory[int(int(tokens[2])/4)] = memory[int(int(tokens[3])/4)] - memory[int(int(tokens[4])/4)]
     elif tokens[1] == 'MUL':
-        memory[int(tokens[2])/4] = memory[int(tokens[3])/4] * memory[int(tokens[4])/4]
+        memory[int(int(tokens[2])/4)] = memory[int(int(tokens[3])/4)] * memory[int(int(tokens[4])/4)]
     elif tokens[1] == 'DIV':
-        memory[int(tokens[2])/4] = memory[int(tokens[3])/4] / memory[int(tokens[4])/4]
+        memory[int(int(tokens[2])/4)] = memory[int(int(tokens[3])/4)] / memory[int(int(tokens[4])/4)]
     elif tokens[1] == 'COP':
-        memory[int(tokens[2])/4] = memory[int(tokens[3])/4]
+        memory[int(int(tokens[2])/4)] = memory[int(int(tokens[3])/4)]
     elif tokens[1] == 'AFC':
-        memory[int(tokens[2])/4] = int(tokens[3])
+        memory[int(int(tokens[2])/4)] = int(tokens[3])
     elif tokens[1] == 'JMP':
-        ip = int(tokens[2])
+        ip = int(tokens[2]) - 1
     elif tokens[1] == 'JMF':
-        if memory[int(tokens[2])/4] == 0:
-            ip = int(tokens[3])
+        if memory[int(int(tokens[2])/4)] == 0:
+            ip = int(tokens[3]) - 1
     elif tokens[1] == 'INF':
-        if memory[int(tokens[3])/4] < memory[int(tokens[4])/4]:
-            memory[int(tokens[2])/4] = 1
+        if memory[int(int(tokens[3])/4)] < memory[int(int(tokens[4])/4)]:
+            memory[int(int(tokens[2])/4)] = 1
+        else:
+           memory[int(int(tokens[2])/4)] = 0
     elif tokens[1] == 'SUP':
-        if memory[int(tokens[3])/4] > memory[int(tokens[4])/4]:
-            memory[int(tokens[2])/4] = 1
+        if memory[int(int(tokens[3])/4)] > memory[int(int(tokens[4])/4)]:
+            memory[int(int(tokens[2])/4)] = 1
+        else:
+           memory[int(int(tokens[2])/4)] = 0
     elif tokens[1] == 'EQU':
-        if memory[int(tokens[3])/4] == memory[int(tokens[4])/4]:
-            memory[int(tokens[2])/4] = 1
+        if memory[int(int(tokens[3])/4)] == memory[int(int(tokens[4])/4)]:
+            memory[int(int(tokens[2])/4)] = 1
+        else:
+           memory[int(int(tokens[2])/4)] = 0
     elif tokens[1] == 'PRI':
-        print(memory[int(tokens[2])/4])
+        print(memory[int(int(tokens[2])/4)])
     else :
-        print("Unknown instruction" + tokens[1])
+        #print("Unknown instruction: " + tokens[1])
+        pass
     
     ip += 1
+    #sleep(0.1)
 
 print("End of program")

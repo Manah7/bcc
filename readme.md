@@ -48,12 +48,32 @@ EQU
 
 AFC
 COP
+NOP
 
 JMP
 JMF
 
 PRI
 RET
+```
+Bytecode:
+```
+-- Convention jeu instruction :
+           -- 00000000 -> ADD
+           -- 00000001 -> SOU
+           -- 00000010 -> MUL
+           -- 00000011 -> LSL
+           -- 00000100 -> LSR
+           -- 00000101 -> INF
+           -- 00000110 -> SUP
+           -- 00000111 -> EQU
+           -- 00001000 -> AFC
+           -- 00001001 -> COP
+           -- 00001010 -> JMP
+           -- 00001011 -> JMF
+           -- 00001100 -> PRI
+           -- 00001101 -> RET
+           -- 11111111 -> NOP
 ```
 
 ## Contact
