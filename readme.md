@@ -54,6 +54,7 @@ NOP c
 
 JMP ar
 JMF ar
+MOV
 CALL (ASM only)
 
 PRI
