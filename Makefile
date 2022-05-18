@@ -8,8 +8,8 @@ CFLAGS=-Wall -g
 OBJ=y.tab.o lex.yy.o ts.o utils.o stack.o operations.o main.o
 
 PRG=bin/prg
-CA=cross-assembler/ca2.py
-FILE=1example.c
+CA=cross-assembler/ca.py
+FILE=6example.c
 
 all: $(BIN)
 

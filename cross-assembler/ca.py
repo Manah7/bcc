@@ -5,12 +5,18 @@ nb_reg = 8
 lines = open(prg, "r").readlines()
 
 lines_r = []
+lines_r.append(["NOP", 0, 0, 0])
+
+# TODO :
+# - Voir si l'optimisation détruit pas les registre lors des boucles
+# - Appel de fonction avec stack (en fin de mémoire ?) 
+# - Utiliser r0 as sp
 
 print("[+] Cross-assembling...")
 
 # Contient les correspondances entre les anciennes et nouvelles adresses
 addr_r_to_addr_m = {}
-current_addr_r = 0
+current_addr_r = 1
 
 # Pour optimisation
 addr_in_register = {}
@@ -71,7 +77,13 @@ def ldr(reg, addr):
 def st(reg, addr):
     return ["STR", int(reg), int(addr), 0]
 
-#print("\t\t\t\t 1   2   3   4   5   6   7")
+# Pour gestion d'adresses
+def get_new_addr(old_addr):
+    for i in range(1, current_addr_r):
+        if addr_r_to_addr_m[i] == old_addr:
+            return i
+    return -1
+    
 
 for i in range(len(lines)):
     line = lines[i][:-1].split()
@@ -165,17 +177,31 @@ for i in range(len(lines)):
         current_addr_r += 1
 
     elif line[1] == "JMP":
-        lines_r.append([line[1], int(line[2]), 0, 0]) # BAD ADDR
+        lines_r.append([line[1], int(line[2]), 0, 0]) # BAD ADDR -> patché en 2nd passe
         addr_r_to_addr_m[current_addr_r] = num
         current_addr_r += 1
 
     elif line[1] == "JMF":
         lines_r.append(ldr(1, line[2]))
-        lines_r.append([line[1], 1, int(line[3]), 0]) # BAD ADDR
+        lines_r.append([line[1], 1, int(line[3]), 0]) # BAD ADDR -> patché en 2nd passe
 
         addr_r_to_addr_m[current_addr_r] = num
         addr_r_to_addr_m[current_addr_r+1] = num
         current_addr_r += 2
+
+    elif line[1] == "CAL":
+        lines_r.append([line[1], int(line[2]), 0, 0]) # BAD ADDR -> patché en 2nd passe
+        addr_r_to_addr_m[current_addr_r] = num
+        current_addr_r += 1
+
+    elif line[1] == "RET":
+        lines_r.append([line[1], 0, 0, 0])
+        addr_r_to_addr_m[current_addr_r] = num
+        current_addr_r += 1
+
+    else:
+        print("[!] Commande non reconnue : " + line[1])
+
 
     
     date_plus()
@@ -183,28 +209,25 @@ for i in range(len(lines)):
     print_reg()
 
 
-print("[+] Patching JMP with new addresses: ")
-for i in range(len(lines)):
-    line = lines[i][:-1].split()
-
-    if ':' in line[0]:
-        continue
-
-    if line[0] != "JMP" and line[0] != "JMF":
-        continue
-
-    print("[>] Patching " + str(line) + "...")
-
-    # TODO
+print("[+] Patching JMP with new addresses...")
+for i in range(1, current_addr_r):
+    if lines_r[i][0] == "JMP":
+        print("[>] Patching " + str(lines_r[i]), end='', flush=True)
+        lines_r[i][1] = get_new_addr(int(lines_r[i][1]))
+        print(" -> " + str(lines_r[i]))
+    elif lines_r[i][0] == "JMF":
+        print("[>] Patching " + str(lines_r[i]) + "...", end='', flush=True)
+        lines_r[i][2] = get_new_addr(int(lines_r[i][2]))
+        print(" -> " + str(lines_r[i]))
 
 
 print("[+] Nouvelles instructions générées :")
-for i in range(len(lines_r)):
-    print("\t", end='', flush=True)
+for i in range(1, current_addr_r):
+    print("\t" + str(i) + ":\t", end='', flush=True)
     print(lines_r[i])
 
 print("[+] Correspondance des nouvelles adresses :")
-for i in range(len(lines_r)):
+for i in range(1, current_addr_r):
     print("\t", end='', flush=True)
     print(str(addr_r_to_addr_m[i]) + " <- " + str(i))
     
@@ -220,6 +243,7 @@ op2bin["EQU"] = 7
 op2bin["AFC"] = 8
 op2bin["COP"] = 9
 op2bin["JMP"] = 10
+op2bin["CAL"] = 10 # TODO
 op2bin["JMF"] = 11
 op2bin["PRI"] = 12
 op2bin["RET"] = 13
