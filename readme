@@ -1,0 +1,22 @@
+This directory contains a basic C compiler (BCC), developed as part of the
+computer system course of the fourth year of computer and network studies at
+INSA Toulouse.
+
+This compiler supports a simplified syntax of the C language, including
+mathematical operations, loops and functions. It makes it possible to produce
+assembly code and/or a binary object executable by the associated FPGA. The
+assembly instruction set used is specific to the project and is used by the
+cross-assembler to produce the object code. The compiler is implemented in Lex,
+Yacc and C; the cross-assembler is developed in Python. The cross-assembler also
+performs code optimization operations in two passes and allows the use of
+registers.
+
+To get started and to compile one of the examples (see Makefile and example/),
+use:
+
+$ make objet
+
+GNU General Public License, version 3 (GPLv3).
+
+Manah <contact@manah.fr> 
+Enjmateo <Enjmateo@users.noreply.github.com>

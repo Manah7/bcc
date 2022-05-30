@@ -75,7 +75,7 @@ def ldr(reg, addr):
     return ["LDR", int(reg), int(addr), 0]
 
 def st(reg, addr):
-    return ["STR", int(reg), int(addr), 0]
+    return ["STR", int(addr), int(reg), 0]
 
 # Pour gestion d'adresses
 def get_new_addr(old_addr):
