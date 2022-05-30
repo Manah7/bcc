@@ -1,0 +1,48 @@
+-- for developpement purpose only --
+
+## Instruction set
+Supported instructions:
+ADD
+MUL
+SOU
+DIV
+LSL
+LSR
+
+INF
+SUP
+EQU
+
+AFC
+COP
+LDR
+STR
+NOP
+
+JMP
+JMF
+MOV
+CAL
+
+PRI
+RET
+
+-- Convention jeu instruction :
+           -- 0   00000000 -> ADD
+           -- 1   00000001 -> SOU
+           -- 2   00000010 -> MUL
+           -- 3   00000011 -> LSL
+           -- 4   00000100 -> LSR
+           -- 5   00000101 -> INF
+           -- 6   00000110 -> SUP
+           -- 7   00000111 -> EQU
+           -- 8   00001000 -> AFC
+           -- 9   00001001 -> COP
+           -- 10  00001010 -> JMP
+           -- 11  00001011 -> JMF
+           -- 12  00001100 -> PRI
+           -- 13  00001101 -> RET
+           -- 14  00001110 -> LDR
+           -- 15  00001111 -> STR
+           -- 255 11111111 -> NOP
+
