@@ -151,6 +151,23 @@ void patch_if(int to_patch)
     stack[to_patch].op2 = stack_top;
 }
 
+int pre_else(int if_to_patch)
+{
+    bcc_print("[+] Entrée fonction pre_else\n");
+    printf("[+] If to patch: %d\n", if_to_patch);
+    stack[if_to_patch].op2 = stack[if_to_patch].op2 + 1;
+    add_stack_op1("JMP", -2);
+
+    return stack_top - 1;
+}
+
+void patch_else(int to_patch)
+{
+    bcc_print("[>] Entrée fonction patch_else\n");
+    printf("[>] %d \n", to_patch);
+    stack[to_patch].op1 = stack_top;
+}
+
 int pre_while(int arg)
 {
     bcc_print("[+] Entrée fonction pre_while\n");

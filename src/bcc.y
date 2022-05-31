@@ -17,21 +17,19 @@ struct Instruction{
 %}
 
 %union { int nb; int addr; char var[128]; float fnb; }
-%token tWHILE tIF tELSE tFOR tRETURN tGOTO tLABEL tPRINT
-%token tINT tFLOAT tVOID tCONST
-%token tEGALEGAL tPLUSEGAL tMOINSEGAL tINCR tDINCR tLSL tLSR tASSIGN tSOU tADD tMUL tDIV tXOR tAND tOR tINF tSUP
-%token tEOL tVIRGULE
-%token tREF 
+%token tWHILE tIF tELSE tRETURN tPRINT
+%token tINT tFLOAT tVOID
+%token tEGALEGAL tPLUSEGAL tMOINSEGAL tLSL tLSR tASSIGN tSOU tADD tMUL tDIV tINF tSUP
+%token tEOL
 %token tPO tPF tAO tAF
-%token tERROR
 
 %token <nb> tNB_INT
 %type <nb> Type
-%token <fnb> tNB_FLOAT
 %token <var> tID
 %token <var> tMAIN
 %type <var> Affectation
 %type <addr> Maths
+%type <addr> If
 
 %start Code
 %%
@@ -60,9 +58,6 @@ Maths : tID {$$ = get_symbol_addr($1);}
     | Maths tEGALEGAL Maths {$$ = asm_eq($1, $3);}
     | Maths tLSL Maths {$$ = asm_lsl($1, $3);}
     | Maths tLSR Maths {$$ = asm_lsr($1, $3);}
-/*    | Maths tXOR Maths 
-    | Maths tAND Maths 
-    | Maths tOR Maths  */
     | tNB_INT {$$ = asm_temp_val($1);}
 
 Print : tPRINT tPO Maths tPF tEOL {asm_print($3);};
@@ -86,17 +81,21 @@ Return : tRETURN tEOL {add_return();};
 Scope : tAO {prof_plus();} CorpScope tAF {prof_moins();};
 
 CorpScope : CorpElem | CorpScope CorpElem;
-CorpElem : VarDec | While | If | Affectation | PlusEgal | MoinsEgal | Scope | Print | fctnCall | Return;
+CorpElem : VarDec | While | If | IfElse | Affectation | PlusEgal | MoinsEgal | Scope | Print | fctnCall | Return;
 
 Affectation : tID tASSIGN Maths tEOL {asm_assign_int_value(get_symbol_addr($1), $3);};
 
-If : tIF Maths {prof_plus(); $<addr>$ = pre_if($2);} Scope {patch_if($<addr>3); prof_moins();};
+If : tIF Maths {prof_plus(); $<addr>$ = pre_if($2);} Scope {patch_if($<addr>3); prof_moins(); $$ = $<addr>3;};
+
+IfElse : If tELSE {prof_plus(); $<addr>$ = pre_else($1);} 
+        Scope 
+        {patch_else($<addr>3); prof_moins();};
 
 While : tWHILE Maths {prof_plus(); $<addr>$ = pre_while($2);} Scope {patch_while($<addr>3); prof_moins();};
 
 %%
 
 void yyerror(char *s) {
-    fprintf(stderr, "%s\n", s); 
+    fprintf(stderr, "[!] %s\n", s); 
     exit(4);
 }

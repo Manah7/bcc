@@ -1,21 +1,15 @@
 int main(){
     int a = 2 ;
+    int b = 9;
+
     if (a == 2) {
         print(a);
     }
 
-    int b = 9;
-
-    while (b > 0) {
+    if (b == 9) {
         print(b);
-        b = b - 1;
+    } else {
+        b = b + 1;
     }
 
-    int c = 0;
-    print(c);
-
-    while (c == 10) {
-        c = c + 1;
-        print(c);
-    }
 }

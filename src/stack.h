@@ -14,6 +14,9 @@ void unstack(FILE * out);
 int pre_if(int arg);
 void patch_if(int to_patch);
 
+int pre_else(int if_to_patch);
+void patch_else(int to_patch);
+
 int pre_while(int arg);
 void patch_while(int to_patch);
 

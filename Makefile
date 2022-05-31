@@ -31,7 +31,7 @@ $(BIN): $(OBJ)
 clean:
 	rm -fr $(OBJ) y.tab.c y.tab.h lex.yy.c bcc y.output .gdb_history bin/
 
-example: all
+example: clean all
 	@./bcc examples/$(FILE) 
 	@echo
 	@./$(CA)

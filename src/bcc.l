@@ -15,7 +15,6 @@
 "while" { return tWHILE; }
 "if" { return tIF; }
 "else" { return tELSE; }
-"for" { return tFOR; }
 
 "main" { strncpy(yylval.var, "main", 128);
         return tMAIN; }
@@ -24,18 +23,11 @@
 "int" { return tINT; }
 "float" { return tFLOAT; }
 "void" { return tVOID; }
-"const" { return tCONST; }
-
 "print" { return tPRINT; }
-
-"goto" { return tGOTO; }
-":" { return tLABEL; }
 
 "==" { return tEGALEGAL; }
 "+=" { return tPLUSEGAL; }
 "-=" { return tMOINSEGAL; }
-"++" { return tINCR; }
-"--" { return tDINCR; }
 "<<" { return tLSL; }
 ">>" { return tLSR; }
 "="	{ return tASSIGN; }
@@ -43,17 +35,11 @@
 "+"	{ return tADD; }
 "*"	{ return tMUL; }
 "/"	{ return tDIV; }
-"^"	{ return tXOR; }
-"&&" { return tAND; }
-"||" { return tOR; }
 
 "<" { return tINF; }
 ">" { return tSUP; }
 
 ";" { return tEOL; }
-"," { return tVIRGULE; }
-
-"&" { return tREF; }
 
 "("	{ return tPO; }
 ")"	{ return tPF; }
@@ -62,7 +48,8 @@
 
 -?[0-9]+(\.[0-9]+) {
 	  yylval.nb = atof(yytext);
-	  return tNB_FLOAT;
+       return -255; 
+	  //return tNB_FLOAT;
 	}
 
 -?[0-9]+ {
@@ -76,4 +63,4 @@
     }
 
 " " {}
-.	{ return tERROR; }
+.	{ printf("[!] Erreur lexicale : %s\n", yytext); exit(1); }
