@@ -11,10 +11,16 @@ Yacc and C; the cross-assembler is developed in Python. The cross-assembler also
 performs code optimization operations in two passes and allows the use of
 registers.
 
-To get started and to compile one of the examples (see Makefile and example/),
+To get started and to compile one of the examples (see Makefile and examples/),
 use:
 
-$ make objet
+$ make example
+
+Or to compile a given source file:
+
+$ make
+$ ./bcc <source_file>
+$ ./ca.py <asm_file>
 
 GNU General Public License, version 3 (GPLv3).
 

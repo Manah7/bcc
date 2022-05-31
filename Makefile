@@ -26,11 +26,10 @@ $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 clean:
-	rm -f $(OBJ) y.tab.c y.tab.h lex.yy.c bcc y.output .gdb_history
+	rm -fr $(OBJ) y.tab.c y.tab.h lex.yy.c bcc y.output .gdb_history bin/
 
-objet:
-	make
-	./bcc < example/$(FILE) 1>bin/prg
-	./$(CA)
-	make clean
+example: all
+	@./bcc examples/$(FILE) 
+	@echo
+	@./$(CA)
 

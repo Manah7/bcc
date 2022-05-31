@@ -21,7 +21,6 @@ NOP
 
 JMP
 JMF
-MOV
 CAL
 
 PRI

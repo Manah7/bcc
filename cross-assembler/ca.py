@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 
-prg = "bin/prg"
+import sys
+
+print("CA - Cross-assembler")
+print("GNU GPL v3 - 2022")
+print("Manah <contact@manah.fr>,")
+print("Enjmateo <Enjmateo@users.noreply.github.com>")
+print("")
+
+if len(sys.argv) == 1:
+    prg = "bin/prg.s"
+elif len(sys.argv) == 2:
+    prg = sys.argv[1]
+
 nb_reg = 8
 lines = open(prg, "r").readlines()
 
@@ -223,12 +235,12 @@ for i in range(1, current_addr_r):
 
 print("[+] Nouvelles instructions générées :")
 for i in range(1, current_addr_r):
-    print("\t" + str(i) + ":\t", end='', flush=True)
+    print("[>]\t" + str(i) + ":\t", end='', flush=True)
     print(lines_r[i])
 
 print("[+] Correspondance des nouvelles adresses :")
 for i in range(1, current_addr_r):
-    print("\t", end='', flush=True)
+    print("[>]\t", end='', flush=True)
     print(str(addr_r_to_addr_m[i]) + " <- " + str(i))
     
 op2bin = {}
@@ -253,14 +265,11 @@ op2bin["NOP"] = 255
 
 
 print("[+] Code objet :")
-print("#############")
-print("")
-print("(")
+print("\t(")
 for x in lines_r:
-    print("(x\"%02x%02x%02x%02x\")," % (op2bin[x[0]], x[1], x[2], x[3]))
-print("others => x\"ff000000\")")
-print("")
-print("#############")
+    print("\t(x\"%02x%02x%02x%02x\")," % (op2bin[x[0]], x[1], x[2], x[3]))
+print("\tothers => x\"ff000000\")")
 
-print("Nombre d'instruction : %d" % len(lines_r))
-print("")
+print("[+] Nombre d'instruction : %d" % len(lines_r))
+print("[+] Nombre d'adresses : %d" % len(addr_r_to_addr_m))
+print("[+] Done.")

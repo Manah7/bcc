@@ -55,7 +55,10 @@ dkms.conf
 y.tab.c
 y.tab.h
 lex.yy.c
+
+# Project
 bcc
+bin/
 
 # IDE 
 .vscode

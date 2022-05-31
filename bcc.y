@@ -8,6 +8,7 @@
 
 int yylex();
 void yyerror(char *s);
+
 struct Instruction{
   char instruction[128];
   int addresse;

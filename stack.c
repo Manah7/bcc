@@ -82,7 +82,7 @@ int get_fnct_stack(int addr)
 /** @brief Unstack and apply modifier at the end of the parsing.
  *  Also apply corrector for function calls.
  **/
-void unstack()
+void unstack(FILE * out)
 {
     bcc_print("[+] Unstacking: \n");
     int sp = SP_START;
@@ -90,9 +90,9 @@ void unstack()
     {
         if (stack[sp].op1 == -3)
         {
-            //printf("\n");
-            printf("%d\tNOP\n", sp);
-            printf("%s: \n", get_symbol_name(stack[sp].op2));
+            //fprintf(out, "\n");
+            fprintf(out, "%d\tNOP\n", sp);
+            fprintf(out, "%s: \n", get_symbol_name(stack[sp].op2));
             sp++;
             continue;
         }
@@ -102,24 +102,25 @@ void unstack()
             stack[sp].op2 = -1;
         }
 
-        printf("%d\t", sp);
-        printf("%s ", stack[sp].operande);
+        fprintf(out, "%d\t", sp);
+        fprintf(out, "%s ", stack[sp].operande);
         if (stack[sp].op1 != -1)
         {
-            printf("%d ", stack[sp].op1);
+            fprintf(out, "%d ", stack[sp].op1);
             if (stack[sp].op2 != -1)
             {
-                printf("%d ", stack[sp].op2);
+                fprintf(out, "%d ", stack[sp].op2);
                 if (stack[sp].op3 != -1)
                 {
-                    printf("%d", stack[sp].op3);
+                    fprintf(out, "%d", stack[sp].op3);
                 }
             }
         }
-        printf("\n");
+        fprintf(out, "\n");
 
         sp++;
     }
+    bcc_print("[+] Unstacked.\n");
 }
 
 void add_return()
