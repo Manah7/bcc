@@ -1,9 +1,12 @@
-GRM=bcc.y
-LEX=bcc.l
+GRM=src/bcc.y
+LEX=src/bcc.l
 BIN=bcc
 
+SRC_DIR=src
+OBJ_DIR=obj
+
 CC=gcc
-CFLAGS=-Wall -g
+CFLAGS=-Wall -g -I$(SRC_DIR)
 
 OBJ=y.tab.o lex.yy.o ts.o utils.o stack.o operations.o main.o
 
@@ -13,7 +16,7 @@ FILE=6example.c
 
 all: $(BIN)
 
-%.o: %.c
+%.o: $(SRC_DIR)/%.c 
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 y.tab.c: $(GRM)
