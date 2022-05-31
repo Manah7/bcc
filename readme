@@ -9,18 +9,23 @@ assembly instruction set used is specific to the project and is used by the
 cross-assembler to produce the object code. The compiler is implemented in Lex,
 Yacc and C; the cross-assembler is developed in Python. The cross-assembler also
 performs code optimization operations in two passes and allows the use of
-registers.
+registers. An interpreter is available to execute the assembly code produced by
+the compiler.
 
 To get started and compile one of the examples (see Makefile and examples/),
 use:
 
 $ make example
 
-Or to compile a given source file:
+To compile a given source file use:
 
 $ make
 $ ./bcc <source_file>
 $ ./ca.py <asm_file>
+
+You can also use the given interpreter to run the compiled assembly code:
+
+$ make demo
 
 GNU General Public License, version 3 (GPLv3), see <license>.
 

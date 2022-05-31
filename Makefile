@@ -12,7 +12,8 @@ OBJ=y.tab.o lex.yy.o ts.o utils.o stack.o operations.o main.o
 
 PRG=bin/prg
 CA=cross-assembler/ca.py
-FILE=6example.c
+ITR=interpreter/itr.py
+FILE=examples/6example.c
 
 all: $(BIN)
 
@@ -32,7 +33,14 @@ clean:
 	rm -fr $(OBJ) y.tab.c y.tab.h lex.yy.c bcc y.output .gdb_history bin/
 
 example: clean all
-	@./bcc examples/$(FILE) 
+	@./bcc $(FILE) 
 	@echo
 	@./$(CA)
+
+demo: clean all
+	@./bcc $(FILE)
+	@echo
+	@./$(CA)
+	@echo
+	@./$(ITR) 
 
