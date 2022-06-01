@@ -1,7 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
-
 entity pipeline is
     Port ( IN_A : in STD_LOGIC_VECTOR (7 downto 0);
            IN_B : in STD_LOGIC_VECTOR (7 downto 0);

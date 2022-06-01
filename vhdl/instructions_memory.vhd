@@ -5,19 +5,33 @@ use IEEE.NUMERIC_STD.all;
 
 entity instructions_memory is
     Port ( addr : in STD_LOGIC_VECTOR (7 downto 0);
-           CLK : in STD_LOGIC;
            OUTPUT : out STD_LOGIC_VECTOR (31 downto 0));
 end instructions_memory;
 
+-- 00 -> ADD
+-- 01 -> SOU
+-- 02 -> MUL
+-- 03 -> LSL
+-- 04 -> LSR
+-- 05 -> INF
+-- 06 -> SUP
+-- 07 -> EQU
+-- 08 -> AFC
+-- 09 -> COP
+-- 0a -> JMP
+-- 0b -> JMF
+-- 0c -> PRI
+-- 0d -> RET
+-- 0e -> LDR
+-- 0f -> STR
+-- ff -> NOP
+
 architecture Behavioral of instructions_memory is
 type memory is array (0 to 255) of STD_LOGIC_VECTOR (31 downto 0);
-   signal mem : memory := ((x"ff000000"),(x"08010200"), others => (x"ff000000"));
+    -- Exemple de code pour gestion des aléas
+   signal mem : memory := ((x"ff000000"),(x"08010c00"),(x"09030100"),others => (x"ff000000"));
 begin
-process
-    begin
-     wait until CLK'event and CLK='1';
-            OUTPUT <= mem(to_integer(unsigned(addr)));
-    end process;
-    
+
+    OUTPUT <= mem(to_integer(unsigned(addr)));
 
 end Behavioral;

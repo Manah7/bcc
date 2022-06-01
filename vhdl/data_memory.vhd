@@ -2,7 +2,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.all;
 
-
 entity data_memory is
     Port ( addr : in STD_LOGIC_VECTOR (7 downto 0);
            INPUT : in STD_LOGIC_VECTOR (7 downto 0);
@@ -21,11 +20,11 @@ process
      wait until CLK'event and CLK='0';
         if( RST = '0') then mem <= (others => X"00"); end if;
         if( RW = '0' ) then
-            mem(to_integer(unsigned(addr))) <= INPUT;
-        else 
-            OUTPUT <= mem(to_integer(unsigned(addr)));
+            mem(to_integer(unsigned(addr))) <= INPUT;            
         end if;
+        OUTPUT <= mem(to_integer(unsigned(addr)));
     end process;
+    
 
 
 end Behavioral;

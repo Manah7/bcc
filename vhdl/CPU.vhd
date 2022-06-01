@@ -1,5 +1,35 @@
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: 
+-- 
+-- Create Date: 07.04.2022 11:54:34
+-- Design Name: 
+-- Module Name: CPU - Behavioral
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: 
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
+
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx leaf cells in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
 entity CPU is
     Port ( 
@@ -50,7 +80,6 @@ component banc_registres is
 end component;
 component instructions_memory is
     Port ( addr : in STD_LOGIC_VECTOR (7 downto 0);
-           CLK : in STD_LOGIC;
            OUTPUT : out STD_LOGIC_VECTOR (31 downto 0));
 end component;
 component data_memory is
@@ -61,6 +90,15 @@ component data_memory is
            CLK : in STD_LOGIC;
            OUTPUT : out STD_LOGIC_VECTOR (7 downto 0));
 end component;
+component ControlUnit is
+  Port (
+    PipOut_Op_L_D, PipOut_Op_D_E, PipOut_Op_E_M : in STD_LOGIC_VECTOR (7 downto 0) := X"00";
+    PipOut_A_L_D, PipOut_A_D_E, PipOut_A_E_M  : in STD_LOGIC_VECTOR (7 downto 0) := X"00";
+    PipOut_B_L_D, PipOut_B_D_E, PipOut_B_E_M  : in STD_LOGIC_VECTOR (7 downto 0) := X"00";
+    PipOut_C_L_D, PipOut_C_D_E, PipOut_C_E_M  : in STD_LOGIC_VECTOR (7 downto 0) := X"00";
+    NOP : out STD_LOGIC);
+end component;
+
 -- Convention jeu instruction :
            -- 00000000 -> ADD
            -- 00000001 -> SOU
@@ -80,7 +118,8 @@ end component;
            -- 00001111 -> STR
            -- 11111111 -> NOP
            -- 
-           
+signal clock_monitored : STD_LOGIC;
+signal nope : STD_LOGIC;
 signal point_addr: STD_LOGIC_VECTOR (7 downto 0) := X"00";
 signal jump_addr: STD_LOGIC_VECTOR (7 downto 0) := X"00";
 signal jump : STD_LOGIC := '0';
@@ -93,6 +132,8 @@ signal PipOut_A_L_D, PipOut_A_D_E, PipOut_A_E_M , PipOut_A_M_R : STD_LOGIC_VECTO
 signal PipOut_B_L_D, PipOut_B_D_E, PipOut_B_E_M , PipOut_B_M_R : STD_LOGIC_VECTOR (7 downto 0) := X"00";
 signal PipOut_C_L_D, PipOut_C_D_E, PipOut_C_E_M , PipOut_C_M_R : STD_LOGIC_VECTOR (7 downto 0) := X"00";
 
+--sortie du premier pipeline à controler par la CU
+signal OPP_LI_DI : STD_LOGIC_VECTOR (7 downto 0) := X"00";
 --ELLEMENTS
 
 --banc registre
@@ -116,14 +157,14 @@ inst_point : IP port map (
     Dout=> point_addr, 
     Din => jump_addr, 
     RST => RSTCPU, 
-    EN => '0', 
+    EN => nope, 
     LOAD => jump);
 
 pip_LI_DI : pipeline port map (
     IN_A => out_opp(23 downto 16),
     IN_B => out_opp(15 downto 8),
     IN_C => out_opp(7 downto 0),
-    IN_OPP => out_opp(31 downto 24),
+    IN_OPP => OPP_LI_DI,
     OUT_A => PipOut_A_L_D,
     OUT_B => PipOut_B_L_D,
     OUT_C => PipOut_C_L_D,
@@ -134,7 +175,7 @@ pip_LI_DI : pipeline port map (
 pip_DI_EX : pipeline port map (
     IN_A => PipOut_A_L_D,
     IN_B => Mux_regi,
-    IN_C => PipOut_C_L_D,
+    IN_C => reg_B,
     IN_OPP => PipOut_Op_L_D,
     OUT_A => PipOut_A_D_E,
     OUT_B => PipOut_B_D_E,
@@ -164,8 +205,8 @@ pip_EX_Mem : pipeline port map (
     CLK => CKCPU);
     
 data_mem : data_memory port map (
-    addr => PipOut_B_E_M,
-    INPUT => PipOut_A_E_M,
+    addr => Mux_mem1,
+    INPUT => PipOut_B_E_M,
     RW => mem_RW,
     RST => RSTCPU,
     CLK => CKCPU,
@@ -173,7 +214,7 @@ data_mem : data_memory port map (
 );
 pip_Mem_RE : pipeline port map (
     IN_A => PipOut_A_E_M,
-    IN_B => PipOut_B_E_M,
+    IN_B => Mux_mem2,
     IN_C => PipOut_C_E_M,
     IN_OPP => PipOut_Op_E_M,
     OUT_A => PipOut_A_M_R,
@@ -195,16 +236,52 @@ register_bench : banc_registres port map (
 
 instru_mem :  instructions_memory  port map(
     addr => point_addr,
-    CLK => CKCPU,
     OUTPUT => out_opp);
     
+
+CU : ControlUnit port map (
+   PipOut_Op_L_D => out_opp(31 downto 24), PipOut_Op_D_E => PipOut_Op_L_D,
+   PipOut_A_L_D => out_opp(23 downto 16), PipOut_A_D_E => PipOut_A_L_D,
+   PipOut_B_L_D => out_opp(15 downto 8), PipOut_B_D_E => PipOut_B_L_D,
+   PipOut_C_L_D => out_opp(7 downto 0), PipOut_C_D_E => PipOut_C_L_D,
+   PipOut_Op_E_M => PipOut_Op_D_E, 
+        PipOut_A_E_M => PipOut_A_D_E,
+        PipOut_B_E_M => PipOut_B_D_E, 
+        PipOut_C_E_M => PipOut_C_D_E, 
+   NOP => nope);
+   
+ -- injection de nop si aléa
+ OPP_LI_DI<= X"ff" when nope='1' else out_opp(31 downto 24);
+
 -- Banc de registre :
-    Mux_regi <= reg_A when PipOut_Op_L_D = "00001001" else PipOut_B_L_D; --Si COP lecture au lieu de passer l'info
-    reg_wr <= '1' when PipOut_Op_M_R = "00001000" else '0'; -- Si AFC ecriture
---  UAL
+    -- Si AFC (stockage dans les registres) on passe la valeur, 
+    -- Si LDR (load depuis la memoire) on passe l'adresse mem, sinon on passe la valeur à l'adresse
+    Mux_regi <= PipOut_B_L_D when 
+        PipOut_Op_L_D = "00001000" or
+        PipOut_Op_L_D = "00001110" 
+        -- sinon on fait passer la valeur stocké à l'adresse de B
+        else reg_A; 
+        
+    reg_wr <= '0' when 
+        PipOut_Op_M_R = "00001111" or -- STR
+        PipOut_Op_M_R = "00001010" or -- JMP
+        PipOut_Op_M_R = "00001011" or -- JMF
+        PipOut_Op_M_R = "00001100" or -- PRI
+        PipOut_Op_M_R = "11111111" or   -- NOP
+        PipOut_Op_M_R = "UUUUUUUU"
+        else '1'; -- AFC, COP, ADD, MUL, SUB, SUP ...
+        
+--  UALSS
     --Multiplxeur et autre implémenté directement dans l'UAL
+    
 -- Mémoire de données :
     mem_RW <= '0' when PipOut_Op_E_M = "00001111" else '1'; --0 store 1 load
+    
+    --Lecture de la mémoire si LDR
     Mux_mem2 <= mem_out when  PipOut_Op_E_M = "00001110" else PipOut_B_E_M;
+    
+    -- Adresse d'écriture = A si STR
+    Mux_mem1 <= PipOut_A_E_M when PipOut_Op_E_M = "00001111" else PipOut_B_E_M ;
+
 
 end Behavioral;

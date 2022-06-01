@@ -2,7 +2,6 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.all;
 
-
 entity banc_registres is
     Port ( addr_A : in STD_LOGIC_VECTOR (3 downto 0);
            addr_B : in STD_LOGIC_VECTOR (3 downto 0);
@@ -24,11 +23,6 @@ process
      wait until CLK'event and CLK='0';
         if( RST = '0') then reg <= (others => X"00"); end if;
         if( W = '1' ) then
-            if(addr_W=addr_A) then
-                QA <= DATA;
-            elsif (addr_W = addr_B) then
-                QB <= DATA;
-            end if;
             reg(to_integer(unsigned(addr_W))) <= DATA;
         end if;
     end process;
