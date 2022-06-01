@@ -110,6 +110,7 @@ int add_ts(char *name_r, enum Type typ) {
         panic("A variable can't have void type.\n");
         break;
     case tfloat:
+        panic("Float aren't implemented yet.\n");
         bcc_print("[+] Ajout d'un float\n");
         table[nextI].addr = currAddr;
         currAddr+=TAILLE_FLOAT;
@@ -155,13 +156,11 @@ int get_symbol_addr(char *name_r){
     }
 
     bcc_print("[+] Adresse trouvée : <COMMENT>\n");
-    //printf("%d\n", table[i].addr);
     return table[i].addr;
 }
 
 char * get_symbol_name(int addr){
     bcc_print("[+] Entrée fonction get_symbol_name. \n");
-    //printf("[!] Adresse cherchée : %d\n", addr);
     print_ts();
 
     char * name = malloc(TAILLE_SYMBOLE);
@@ -215,10 +214,11 @@ void prof_moins(){
                 currAddr -= TAILLE_INT;
                 break;
             case tfloat:
+                panic("Float aren't implemented yet.\n");
                 currAddr -= TAILLE_FLOAT;
                 break;
             default:
-                bcc_print("[-] Erreur de type !\n");
+                panic("Type error !\n");
                 currAddr -= TAILLE_INT;
                 break;
         }
