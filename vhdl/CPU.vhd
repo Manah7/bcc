@@ -1,35 +1,5 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 07.04.2022 11:54:34
--- Design Name: 
--- Module Name: CPU - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity CPU is
     Port ( 
@@ -236,7 +206,5 @@ instru_mem :  instructions_memory  port map(
 -- Mémoire de données :
     mem_RW <= '0' when PipOut_Op_E_M = "00001111" else '1'; --0 store 1 load
     Mux_mem2 <= mem_out when  PipOut_Op_E_M = "00001110" else PipOut_B_E_M;
-    --Mux_mem1 <= PipOut_A_E_M when PipOut_Op_E_M else PipOut_B_E_M when ;
-
 
 end Behavioral;
