@@ -2,14 +2,18 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "y.tab.h"
+#include "utils.h"
+
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 %}
 
 %option noyywrap
+%option yylineno
 
 %%
 
 [\t]+	{}
-[\n]+   {}
+"\n"      {}
 "//".*$ {}
 
 "while" { return tWHILE; }
@@ -63,4 +67,4 @@
     }
 
 " " {}
-.	{ printf("[!] Erreur lexicale : %s\n", yytext); exit(1); }
+.	{ printf("\033[0;31m[!] Lexical error: \"%s\" at %d\n\033[0m", yytext, yylineno); exit(1); }

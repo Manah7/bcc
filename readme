@@ -10,7 +10,8 @@ cross-assembler to produce the object code. The compiler is implemented in Lex,
 Yacc and C; the cross-assembler is developed in Python. The cross-assembler also
 performs code optimization operations in two passes and allows the use of
 registers. An interpreter is available to execute the assembly code produced by
-the compiler.
+the compiler. A limited management of errors is also implemented, allowing a 
+verbose output in most error cases.
 
 To get started and compile one of the examples (see Makefile and examples/),
 use:
@@ -26,6 +27,11 @@ $ ./ca.py <asm_file>
 You can also use the given interpreter to run the compiled assembly code:
 
 $ make demo
+
+To test the error detection, you can use:
+
+$ make error
+
 
 GNU General Public License, version 3 (GPLv3), see <license>.
 

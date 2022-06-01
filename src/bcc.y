@@ -16,6 +16,9 @@ struct Instruction{
 };
 %}
 
+%locations
+%error-verbose
+
 %union { int nb; int addr; char var[128]; float fnb; }
 %token tWHILE tIF tELSE tRETURN tPRINT
 %token tINT tFLOAT tVOID

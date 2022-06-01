@@ -14,6 +14,7 @@ PRG=bin/prg
 CA=cross-assembler/ca.py
 ITR=interpreter/itr.py
 FILE=examples/6example.c
+FILE_ERR=examples/7example_error.c
 
 all: $(BIN)
 
@@ -37,10 +38,10 @@ example: clean all
 	@echo
 	@./$(CA)
 
-demo: clean all
-	@./bcc $(FILE)
-	@echo
-	@./$(CA)
+demo: example
 	@echo
 	@./$(ITR) 
+
+error: clean all
+	@./bcc $(FILE_ERR) 
 

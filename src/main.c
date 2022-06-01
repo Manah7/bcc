@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -24,9 +25,13 @@ int main(int argc, char* argv[]) {
     }
 
     if ((yyin = fopen(argv[1], "r")) == NULL) {
-        bcc_print("[!] Error: File not found\n");
+        panic("File not found\n");
         return 1;
     }
+
+    char filename[strlen(argv[1])];
+    strcpy(filename, argv[1]);
+    init_utils(&filename);
 
     /* Launch parser */
     bcc_print("[+] Compiling...\n");

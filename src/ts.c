@@ -83,7 +83,9 @@ int add_ts(char *name_r, enum Type typ) {
     strncpy(name, name_r, strlen(name_r));
     
     if(find(name) != -1){
-        panic("Redeclaration of variable (add_ts)");
+        char err[180];
+        sprintf(err, "Redeclaration of variable: %s (add_ts)", name);
+        panic(err);
     }
 
     memset(table[nextI].name, 0, TAILLE_SYMBOLE);
@@ -147,7 +149,9 @@ int get_symbol_addr(char *name_r){
 
     int i = find(name);
     if( i == -1){
-        panic("Opération sur variable non déclarée (symbol addr)\n");
+        char err[180];
+        sprintf(err, "Operation on non-declared variable: %s (symbol addr)\n", name);
+        panic(err);
     }
 
     bcc_print("[+] Adresse trouvée : <COMMENT>\n");
@@ -163,7 +167,9 @@ char * get_symbol_name(int addr){
     char * name = malloc(TAILLE_SYMBOLE);
     int i_var = find_name(addr);
     if(i_var == -1){
-        panic("Opération sur variable non déclarée (symbol name)\n");
+        char err[180];
+        sprintf(err, "Operation on non-declared variable: %s (symbol name)\n", name);
+        panic(err);
     } else {
         strncpy(name, table[find_name(addr)].name, TAILLE_SYMBOLE);
     }
@@ -186,7 +192,9 @@ enum Type get_symbol_type(char *name_r){
 
     int i = find(name);
     if( i == -1){
-        panic("Opération sur variable non déclarée (symbol type)\n");
+        char err[180];
+        sprintf(err, "Operation on non-declared variable: %s (symbol type)\n", name);
+        panic(err);
     }
     return table[i].type;
 }
@@ -202,6 +210,7 @@ void prof_moins(){
 
         switch(table[nextI-1].type){
             case tfunction:
+            case tvoid:
             case tinteger:
                 currAddr -= TAILLE_INT;
                 break;
@@ -222,5 +231,4 @@ void prof_moins(){
     currentProf--;
     bcc_print("[!] Profondeur remontée de 1.\n");
     print_ts();
-
 }
