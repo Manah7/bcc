@@ -28,9 +28,12 @@ You can also use the given interpreter to run the compiled assembly code:
 
 $ make demo
 
-To test the error detection, you can use:
+To test the error detection, use:
 
 $ make error
+
+The vhdl/ folder contains all the source code used on the target FPGA. This part
+is independent of the compiler itself, but is the main target for the compiler.
 
 
 GNU General Public License, version 3 (GPLv3), see <license>.
