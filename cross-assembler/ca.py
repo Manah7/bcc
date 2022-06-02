@@ -289,9 +289,10 @@ if FILE:
     f.write("architecture Behavioral of instructions_memory is\n")
     f.write("type memory is array (0 to 255) of STD_LOGIC_VECTOR (31 downto 0);\n")
 
+    f.write("signal mem : memory := (")
     for x in lines_r:
         f.write("(x\"%02x%02x%02x%02x\")," % (op2bin[x[0]], x[1], x[2], x[3]))
-    f.write("others => x\"ff000000\");\n")
+    f.write("others => (x\"ff000000\"));\n")
 
     f.write("begin\n")
     f.write("\tOUTPUT <= mem(to_integer(unsigned(addr)));\n")
