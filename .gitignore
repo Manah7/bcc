@@ -59,6 +59,8 @@ lex.yy.c
 # Project
 bcc
 bin/
+.scp
+imported.vhd
 
 # IDE 
 .vscode
